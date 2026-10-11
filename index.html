@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pink Text Heart Animation</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        canvas {
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="heart-canvas" width="800" height="800"></canvas>
+
+    <script>
+        const canvas = document.getElementById("heart-canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Center the drawing context
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+
+        // Styling the text to match the image (#ffb6c1 is light pink)
+        ctx.fillStyle = "#ffb6c1";
+        ctx.font = "bold 12px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        // Iteration trackers for the loop animation
+        let outerScale = 11;
+        let innerIdx = 0;
+        const totalPoints = 120; // Exact number of points from Python
+
+        function drawHeart() {
+            // Draw one word per step
+            let angle = innerIdx * (Math.PI * 2) / totalPoints;
+            
+            // Heart math formula equations (translated from Python)
+            let x = 16 * Math.pow(Math.sin(angle), 3) * outerScale;
+            let y = -(13 * Math.cos(angle) - 5 * Math.cos(2 * angle) - 2 * Math.cos(3 * angle) - Math.cos(4 * angle)) * outerScale;
+            
+            // Draw "I love you" at these coordinates
+            ctx.fillText("I love you", x, y);
+
+            // Manage the loops
+            innerIdx++;
+            if (innerIdx >= totalPoints) {
+                // Outer loop iteration
+                innerIdx = 0;
+                outerScale++;
+            }
+
+            // Stop condition from Python (scale stops *before* 17)
+            if (outerScale < 17) {
+                // This controls the speed. Lower = faster, higher = slower.
+                setTimeout(drawHeart, 20); 
+            }
+        }
+
+        // Start the animation on first load
+        drawHeart();
+    </script>
+
+</body>
+</html>
